@@ -2,20 +2,29 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function WelcomeScreen({ onStart, lang, setLang }) {
+  
   useEffect(() => {
+  const playAudioOnce = () => {
     const audio = new Audio('/epic_ThurianX_app.mp3');
     audio.volume = 0.5;
-    audio.play().catch((err) => {
-      console.warn("Auto-play blocked:", err);
-    });
-
+    audio.play().catch(() => {});
     window.__thurianxAudio = audio;
 
-    return () => {
-      audio.pause();
-      audio.currentTime = 0;
-    };
-  }, []);
+    document.removeEventListener('touchstart', playAudioOnce);
+    document.removeEventListener('click', playAudioOnce);
+  };
+
+  document.addEventListener('touchstart', playAudioOnce);
+  document.addEventListener('click', playAudioOnce);
+
+  return () => {
+    if (window.__thurianxAudio) {
+      window.__thurianxAudio.pause();
+      window.__thurianxAudio.currentTime = 0;
+    }
+  };
+}, []);
+
 
   const handleStart = () => {
     onStart();
