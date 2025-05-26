@@ -6,24 +6,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 function WelcomeScreen({ onStart, lang, setLang }) {
   useEffect(() => {
-    const playAudioOnce = () => {
-      const audio = new Audio('/Sia.mp3.mp3');
-      audio.volume = 0.5;
-      audio.play().catch(() => {});
-      document.removeEventListener('touchstart', playAudioOnce);
-    };
-    document.addEventListener('touchstart', playAudioOnce);
-  }, []);
-  const handleStart = () => {
-    const audio = new Audio('/Sia_-_Unstoppable_CeeNaija.com_.mp3');
-    audio.volume = 1.0;
-    audio.play()
-      .then(() => {
-        console.log('🎵 Audio started successfully');
-      })
-      .catch((error) => {
-        console.warn('⚠️ Audio play failed:', error);
-      });
+  const audio = new Audio('/epic_ThurianX_app.mp3');
+  audio.volume = 0.5;
+  audio.currentTime = 0; // หรือ 9 ถ้าต้องการเริ่มวินาทีที่ 9
+  audio.play().catch((error) => {
+    console.warn('⚠️ Audio auto-play blocked:', error);
+  });
+
+  // บันทึก audio เป็น global เพื่อหยุดภายหลังถ้าต้องการ
+  window.__thurianxAudio = audio;
+
+  return () => {
+    // เมื่อออกจากหน้าจอนี้ ให้หยุดเพลง
+    audio.pause();
+    audio.currentTime = 0;
+  };
+}, []);
+  
     onStart();
   };
   
@@ -189,10 +188,10 @@ function App() {
   };
 
   const buttons = {
-    TH: ['📷 ถ่ายภาพ', '📁 คลังภาพ/เลือกไฟล์', '🔍 วิเคราะห์'],
-    EN: ['📷 Take Photo', '📁 Gallery/File', '🔍 Analyze'],
-    CN: ['📷 拍照', '📁 图库/选择文件', '🔍 分析']
-  };
+  TH: ['📷 ถ่ายภาพ', '🔍 วิเคราะห์'],
+  EN: ['📷 Take Photo', '🔍 Analyze'],
+  CN: ['📷 拍照', '🔍 分析']
+};
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
@@ -253,7 +252,7 @@ function App() {
           )}
 
           <input type="file" accept="image/*" capture="environment" onChange={handleUpload} ref={cameraInputRef} className="hidden" />
-          <input type="file" accept="image/*" onChange={handleUpload} ref={fileInputRef} className="hidden" />
+{/*           <input type="file" accept="image/*" onChange={handleUpload} ref={fileInputRef} className="hidden" /> */}
 
           <div className="flex gap-4 flex-wrap justify-center">
             <button onClick={() => cameraInputRef.current && cameraInputRef.current.click()} className="bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-4 rounded-xl text-sm font-medium shadow">
