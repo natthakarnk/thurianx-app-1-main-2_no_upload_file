@@ -2,22 +2,27 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function WelcomeScreen({ onStart, lang, setLang }) {
-  
-useEffect(() => {
+  useEffect(() => {
+  const playAudioOnce = () => {
     const audio = new Audio('/epic_ThurianX_app.mp3');
     audio.volume = 0.5;
-    audio.play().catch((err) => {
-      console.warn('🎵 Cannot auto-play:', err);
-    });
+    audio.play().catch(() => {});
     window.__thurianxAudio = audio;
 
-    return () => {
-      if (window.__thurianxAudio) {
-        window.__thurianxAudio.pause();
-        window.__thurianxAudio.currentTime = 0;
-      }
-    };
-  }, []);
+    document.removeEventListener('touchstart', playAudioOnce);
+    document.removeEventListener('click', playAudioOnce);
+  };
+
+  document.addEventListener('touchstart', playAudioOnce);
+  document.addEventListener('click', playAudioOnce);
+
+  return () => {
+    if (window.__thurianxAudio) {
+      window.__thurianxAudio.pause();
+      window.__thurianxAudio.currentTime = 0;
+    }
+  };
+}, []);
 
 
   const handleStart = () => {
@@ -129,13 +134,13 @@ useEffect(() => {
 function getResultStyle(index) {
   switch (index) {
     case 0:
-      return 'bg-orange-100 text-orange-700'; // ดิบ
+      return 'bg-orange-100 text-orange-700';
     case 1:
-      return 'bg-green-600 text-white'; // พร้อมตัด
+      return 'bg-green-600 text-white';
     case 2:
-      return 'bg-yellow-300 text-yellow-900'; // สุก
+      return 'bg-yellow-300 text-yellow-900';
     case 3:
-      return 'bg-red-200 text-red-700'; // ไม่สามารถระบุได้
+      return 'bg-red-200 text-red-700';
     default:
       return 'bg-gray-200 text-gray-700';
   }
@@ -144,19 +149,17 @@ function getResultStyle(index) {
 function getResultIcon(index) {
   switch (index) {
     case 0:
-      return '⏳'; // ดิบ
+      return '⏳';
     case 1:
-      return '✅'; // พร้อมตัด
+      return '✅';
     case 2:
-      return '🍽️'; // สุก
+      return '🍽️';
     case 3:
-      return '❌'; // ไม่สามารถระบุได้
+      return '❌';
     default:
       return 'ℹ️';
   }
 }
-
-// ... WelcomeScreen remains unchanged
 
 function App() {
   const [image, setImage] = useState(null);
@@ -176,10 +179,10 @@ function App() {
   };
 
   const buttons = {
-  TH: ['📷 ถ่ายภาพ', '🔍 วิเคราะห์'],
-  EN: ['📷 Take Photo', '🔍 Analyze'],
-  CN: ['📷 拍照', '🔍 分析']
-};
+    TH: ['📷 ถ่ายภาพ', '🔍 วิเคราะห์'],
+    EN: ['📷 Take Photo', '🔍 Analyze'],
+    CN: ['📷 拍照', '🔍 分析']
+  };
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
@@ -240,7 +243,6 @@ function App() {
           )}
 
           <input type="file" accept="image/*" capture="environment" onChange={handleUpload} ref={cameraInputRef} className="hidden" />
-{/*           <input type="file" accept="image/*" onChange={handleUpload} ref={fileInputRef} className="hidden" /> */}
 
           <div className="flex gap-4 flex-wrap justify-center">
             <button onClick={() => cameraInputRef.current && cameraInputRef.current.click()} className="bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-4 rounded-xl text-sm font-medium shadow">
@@ -250,8 +252,7 @@ function App() {
             <button onClick={analyzeImage} disabled={!preview || loading} className="bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-xl text-sm font-medium shadow disabled:opacity-40">
               {buttons[lang][1]}
             </button>
-            </div>
-
+          </div>
 
           <AnimatePresence>
             {loading && (
