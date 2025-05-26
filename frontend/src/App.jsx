@@ -3,27 +3,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 function WelcomeScreen({ onStart, lang, setLang }) {
   
-  useEffect(() => {
-  const playAudioOnce = () => {
+useEffect(() => {
     const audio = new Audio('/epic_ThurianX_app.mp3');
     audio.volume = 0.5;
-    audio.play().catch(() => {});
+    audio.play().catch((err) => {
+      console.warn('🎵 Cannot auto-play:', err);
+    });
     window.__thurianxAudio = audio;
 
-    document.removeEventListener('touchstart', playAudioOnce);
-    document.removeEventListener('click', playAudioOnce);
-  };
-
-  document.addEventListener('touchstart', playAudioOnce);
-  document.addEventListener('click', playAudioOnce);
-
-  return () => {
-    if (window.__thurianxAudio) {
-      window.__thurianxAudio.pause();
-      window.__thurianxAudio.currentTime = 0;
-    }
-  };
-}, []);
+    return () => {
+      if (window.__thurianxAudio) {
+        window.__thurianxAudio.pause();
+        window.__thurianxAudio.currentTime = 0;
+      }
+    };
+  }, []);
 
 
   const handleStart = () => {
