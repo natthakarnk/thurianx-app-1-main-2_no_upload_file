@@ -5,27 +5,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 
 function WelcomeScreen({ onStart, lang, setLang }) {
+
   useEffect(() => {
   const audio = new Audio('/epic_ThurianX_app.mp3');
   audio.volume = 0.5;
   audio.play().catch(() => {});
 
-  return () => {
-    audio.pause();
-    audio.currentTime = 0;
-  };
-}, []);
-
-
-  // บันทึก audio เป็น global เพื่อหยุดภายหลังถ้าต้องการ
+  // บันทึก audio เป็น global หากต้องการหยุดจากภายนอก
   window.__thurianxAudio = audio;
 
   return () => {
-    // เมื่อออกจากหน้าจอนี้ ให้หยุดเพลง
     audio.pause();
     audio.currentTime = 0;
   };
 }, []);
+
   
     onStart();
   };
