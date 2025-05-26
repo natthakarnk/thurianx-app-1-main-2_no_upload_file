@@ -6,19 +6,37 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 function WelcomeScreen({ onStart, lang, setLang }) {
 
+ import { useEffect } from 'react';
+
+function WelcomeScreen({ onStart, lang, setLang }) {
   useEffect(() => {
-  const audio = new Audio('/epic_ThurianX_app.mp3');
-  audio.volume = 0.5;
-  audio.play().catch(() => {});
+    const audio = new Audio('/epic_ThurianX_app.mp3');
+    audio.volume = 0.5;
+    audio.play().catch((err) => {
+      console.warn("Auto-play blocked:", err);
+    });
 
-  // บันทึก audio เป็น global หากต้องการหยุดจากภายนอก
-  window.__thurianxAudio = audio;
+    // เก็บไว้ใน window ถ้าจะใช้หยุดจากภายนอก
+    window.__thurianxAudio = audio;
 
-  return () => {
-    audio.pause();
-    audio.currentTime = 0;
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, []);
+
+  const handleStart = () => {
+    onStart();
   };
-}, []);
+
+  return (
+    <div>
+      {/* ส่วนหน้าจอ Welcome ของคุณ */}
+      <button onClick={handleStart}>เริ่มใช้งาน</button>
+    </div>
+  );
+}
+
 
   
     onStart();
