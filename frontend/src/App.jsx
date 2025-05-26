@@ -8,10 +8,14 @@ function WelcomeScreen({ onStart, lang, setLang }) {
   useEffect(() => {
   const audio = new Audio('/epic_ThurianX_app.mp3');
   audio.volume = 0.5;
-  audio.currentTime = 0; // หรือ 9 ถ้าต้องการเริ่มวินาทีที่ 9
-  audio.play().catch((error) => {
-    console.warn('⚠️ Audio auto-play blocked:', error);
-  });
+  audio.play().catch(() => {});
+
+  return () => {
+    audio.pause();
+    audio.currentTime = 0;
+  };
+}, []);
+
 
   // บันทึก audio เป็น global เพื่อหยุดภายหลังถ้าต้องการ
   window.__thurianxAudio = audio;
