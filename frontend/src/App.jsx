@@ -1,13 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-
-
-
-function WelcomeScreen({ onStart, lang, setLang }) {
-
- import { useEffect } from 'react';
-
 function WelcomeScreen({ onStart, lang, setLang }) {
   useEffect(() => {
     const audio = new Audio('/epic_ThurianX_app.mp3');
@@ -16,7 +9,6 @@ function WelcomeScreen({ onStart, lang, setLang }) {
       console.warn("Auto-play blocked:", err);
     });
 
-    // เก็บไว้ใน window ถ้าจะใช้หยุดจากภายนอก
     window.__thurianxAudio = audio;
 
     return () => {
@@ -29,19 +21,6 @@ function WelcomeScreen({ onStart, lang, setLang }) {
     onStart();
   };
 
-  return (
-    <div>
-      {/* ส่วนหน้าจอ Welcome ของคุณ */}
-      <button onClick={handleStart}>เริ่มใช้งาน</button>
-    </div>
-  );
-}
-
-
-  
-    onStart();
-  };
-  
   const headings = {
     TH: 'ระบบตรวจสอบระดับการสุกของทุเรียน ด้วย AI ที่เรียบง่าย งดงาม และแม่นยำ',
     EN: 'Detect Durian Ripeness with AI – Minimal, Elegant, and Precise.',
@@ -81,28 +60,27 @@ function WelcomeScreen({ onStart, lang, setLang }) {
           {subtitle[lang]}
         </p>
         {['TH', 'EN', 'CN'].includes(lang) && (
-  <>
-    <p className="text-base text-gray-500 italic mt-1" style={{ fontFamily: 'Inter, sans-serif' }}>
-      {lang === 'TH'
-        ? 'สร้างโดยทีมงาน Super AI Innovator - ภาคกลาง ศูนย์ลาดกระบัง'
-        : lang === 'EN'
-        ? 'Built by Super AI Innovator Team – Central Region, IT KMITL'
-        : '由 Super AI Innovator 团队 – 中部，KMITL IT 制作 '}
-    </p>
-    <p className="text-base text-gray-500 italic -mt-1" style={{ fontFamily: 'Inter, sans-serif' }}>
-      {lang === 'TH'
-        ? 'ได้รับการสนับสนุนโดยบริษัท การบินกรุงเทพ จำกัด (มหาชน)'
-        : lang === 'EN'
-        ? 'Supported by Bangkok Airways'
-        : '由 Bangkok Airways Public Company Limited 提供支持'}
-    </p>
-  </>
-)}
+          <>
+            <p className="text-base text-gray-500 italic mt-1" style={{ fontFamily: 'Inter, sans-serif' }}>
+              {lang === 'TH'
+                ? 'สร้างโดยทีมงาน Super AI Innovator - ภาคกลาง ศูนย์ลาดกระบัง'
+                : lang === 'EN'
+                ? 'Built by Super AI Innovator Team – Central Region, IT KMITL'
+                : '由 Super AI Innovator 团队 – 中部，KMITL IT 制作 '}
+            </p>
+            <p className="text-base text-gray-500 italic -mt-1" style={{ fontFamily: 'Inter, sans-serif' }}>
+              {lang === 'TH'
+                ? 'ได้รับการสนับสนุนโดยบริษัท การบินกรุงเทพ จำกัด (มหาชน)'
+                : lang === 'EN'
+                ? 'Supported by Bangkok Airways'
+                : '由 Bangkok Airways Public Company Limited 提供支持'}
+            </p>
+          </>
+        )}
         <p className="text-md text-gray-300 max-w-xl mt-6 leading-relaxed">
           {headings[lang]}
         </p>
       </motion.div>
-
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -144,15 +122,6 @@ function WelcomeScreen({ onStart, lang, setLang }) {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
 
 function getResultStyle(index) {
   switch (index) {
@@ -274,13 +243,12 @@ function App() {
             <button onClick={() => cameraInputRef.current && cameraInputRef.current.click()} className="bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-4 rounded-xl text-sm font-medium shadow">
               {buttons[lang][0]}
             </button>
-            <button onClick={() => fileInputRef.current && fileInputRef.current.click()} className="bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-xl text-sm font-medium shadow">
+
+            <button onClick={analyzeImage} disabled={!preview || loading} className="bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-xl text-sm font-medium shadow disabled:opacity-40">
               {buttons[lang][1]}
             </button>
-            <button onClick={analyzeImage} disabled={!preview || loading} className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-xl text-sm font-medium shadow disabled:opacity-40">
-              {buttons[lang][2]}
-            </button>
-          </div>
+            </div>
+
 
           <AnimatePresence>
             {loading && (
